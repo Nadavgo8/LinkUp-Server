@@ -1,24 +1,26 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const userSchema = new mongoose.Schema(
+const UserSchema = new Schema(
   {
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    fullName: { type: String, required: true },
+    email: { type: String, required: true, unique: true, lowercase: true },
+    password: { type: String, required: true, minlength: 6 },
+    fullName: { type: String, required: true, maxlength: 30 },
     dob: { type: Date, required: true }, //date of birth
     bio: String,
     photoUrl: String,
-    goals: [String],
-    languages: [String],
+    goals: [{ type: String }],
+    languages: [{ type: String }],
     location: {
       type: { type: String, enum: ["Point"], default: "Point" },
       coordinates: { type: [Number], default: [0, 0] }, // [lng, lat]
     },
+    verified: { type: Boolean, default: false },
+    idDocUrl: { type: String },
   },
   { timestamps: true }
 );
 
 //Adding geographic index
-userSchema.index({ location: "2dsphere" });
+UserSchema.index({ location: "2dsphere" });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = model("User", UserSchema);

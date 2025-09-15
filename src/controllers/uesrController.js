@@ -1,25 +1,3 @@
-// query params: lat, lng, radius (km), goals (comma), langs (comma)
-// const User = require("../models/User");
-
-// const radiusInMeters = (radiusKm || 20) * 1000;
-// const goalsArray = goals ? goals.split(",") : [];
-// const langsArray = langs ? langs.split(",") : [];
-
-// const users = await User.find({
-//   _id: { $ne: req.userId },
-//   ...(goalsArray.length && { goals: { $in: goalsArray } }),
-//   ...(langsArray.length && { languages: { $in: langsArray } }),
-//   location: {
-//     $near: {
-//       $geometry: {
-//         type: "Point",
-//         coordinates: [parseFloat(lng), parseFloat(lat)],
-//       },
-//       $maxDistance: radiusInMeters,
-//     },
-//   },
-// }).limit(50);
-
 const User = require("../models/User");
 
 exports.getMe = async (req, res, next) => {

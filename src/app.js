@@ -16,9 +16,9 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/profiles", profilesRoutes);
+app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/profiles", profilesRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

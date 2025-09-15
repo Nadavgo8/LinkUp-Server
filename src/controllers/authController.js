@@ -24,12 +24,25 @@ exports.register = async (req, res, next) => {
     if (existing) return res.status(400).json({ msg: "email exists" });
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ email, password: hashed, fullName, dob });
+    const photoUrl = req.file ? req.file.path : undefined;
+
+    const user = await User.create({
+      email,
+      password: hashed,
+      fullName,
+      dob,
+      photoUrl,
+    });
 
     const token = createToken(user._id);
     res.json({
       token,
-      user: { id: user._id, email: user.email, fullName: user.fullName },
+      user: {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        photoUrl: user.photoUrl || null,
+      },
     });
   } catch (err) {
     next(err);

@@ -1,11 +1,13 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const { register, login } = require("../controllers/authController");
+const upload = require("../middlewares/upload");
 
 const router = express.Router();
 
 router.post(
   "/register",
+  upload.single("photo"),
   [
     check("email").isEmail(),
     check("password").isLength({ min: 6 }),

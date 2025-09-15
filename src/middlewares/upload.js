@@ -5,7 +5,7 @@ const cloudinary = require("../config/cloudinary");
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "linkup_ids",
+    folder: "linkup_profiles",
     allowed_formats: ["jpg", "png", "pdf"],
   },
 });

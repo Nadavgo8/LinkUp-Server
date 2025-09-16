@@ -42,3 +42,15 @@ exports.updateMe = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getUserById = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select(
+      "-password -idDocUrl"
+    );
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+};

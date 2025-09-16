@@ -3,14 +3,25 @@ const bcrypt = require("bcryptjs");
 const auth = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload");
 const User = require("../models/User");
-const { getMe, updateMe } = require("../controllers/uesrController");
+const {
+  getMe,
+  updateMe,
+  getUserById,
+} = require("../controllers/uesrController");
 
 const router = express.Router();
 
+// Protected routes - require authentication
 router.use(auth);
 
-router.get("/me", getMe); //consider change "/me" route name
-router.put("/me", updateMe);
+// GET /user/profile - Get logged in user profile
+router.get("/profile", getMe);
+
+// PUT /user/profile - Update user profile
+router.put("/profile", updateMe);
+
+// GET /user/:id - Get another user's profile
+router.get("/:id", getUserById);
 
 //Do we need option to change password ?
 router.put("/change-password", async (req, res) => {

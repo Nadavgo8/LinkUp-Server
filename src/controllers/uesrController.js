@@ -25,7 +25,12 @@ exports.updateMe = async (req, res, next) => {
       if (req.body[k] !== undefined) updates[k] = req.body[k];
     });
 
-    // location handling: expect { lat, lng } in body (או location.coordinates)
+    // normalize goals to lowercase
+    if (updates.goals) {
+      updates.goals = updates.goals.map((g) => g.toLowerCase());
+    }
+
+    // location handling: expect { lat, lng } in body
     if (req.body.lat !== undefined && req.body.lng !== undefined) {
       updates.location = {
         type: "Point",

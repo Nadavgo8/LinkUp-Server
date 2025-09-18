@@ -8,7 +8,10 @@ const UserSchema = new Schema(
     dob: { type: Date, required: true }, //date of birth
     bio: String,
     photoUrl: String,
-    goals: [{ type: String }],
+    goals: {
+      type: [String],
+      set: (arr) => arr.map((s) => s.toLowerCase()),
+    },
     languages: [{ type: String }],
     location: {
       type: { type: String, enum: ["Point"], default: "Point" },

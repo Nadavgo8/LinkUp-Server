@@ -8,12 +8,14 @@ const userRoutes = require("./routes/userRoutes");
 const profilesRoutes = require("./routes/profilesRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const eventRoutes = require("./routes/eventRoutes");
+const connectionRoutes = require("./routes/connectionRoutes");
 
 const app = express();
 
 // Middlewares
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || "*" }));
+app.use(cors());
+// app.use(cors({ origin: process.env.CLIENT_ORIGIN || "*" }));
 app.use(morgan("dev"));
 app.use(express.json());
 
@@ -23,6 +25,7 @@ app.use("/user", userRoutes);
 app.use("/profile", profilesRoutes);
 app.use("/chats", chatRoutes);
 app.use("/events", eventRoutes);
+app.use("/connections", connectionRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

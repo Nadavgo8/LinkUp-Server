@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Connection = require("../models/Connection");
 
 exports.discoverUsers = async (req, res, next) => {
   try {
@@ -12,6 +13,12 @@ exports.discoverUsers = async (req, res, next) => {
     const langsArray = langs
       ? langs.split(",").map((s) => s.trim().toLowerCase())
       : [];
+
+    // Exclude users that the logged-in user has already passed on
+    const passFilter = { from: req.userId, decision: "pass" };
+    if (goalsArray.length) passFilter.goal = { $in: goalsArray };
+    const passes = await Connection.find(passFilter).select("to").lean();
+    const excludeIds = passes.map((d) => d.to);
 
     if (!lat || !lng) {
       const me = await User.findById(req.userId);
@@ -33,7 +40,13 @@ exports.discoverUsers = async (req, res, next) => {
           distanceField: "distanceMeters",
           maxDistance: radiusInMeters,
           spherical: true,
-          query: { _id: { $ne: req.userId } },
+          // query: { _id: { $ne: req.userId } },
+           query: {
+            _id: {
+              $ne: req.userId,
+              ...(excludeIds.length ? { $nin: excludeIds } : {}),
+            },
+          },
         },
       },
       {

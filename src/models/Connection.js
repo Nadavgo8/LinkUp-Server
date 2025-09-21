@@ -13,3 +13,21 @@ const ConnectionSchema = new Schema(
 ConnectionSchema.index({ from: 1, to: 1, goal: 1 }, { unique: true });
 
 module.exports = model("Connection", ConnectionSchema);
+
+
+// const { Schema, model } = require("mongoose");
+
+// const ConnectionSchema = new Schema(
+//   {
+//     goal: { type: String, required: true },
+//     userAID: { type: String, required: true },
+//     userBID: { type: String, required: true },
+//     aWantsToMatch: { type: Boolean, default: false },
+//     bWantsToMatch: { type: Boolean, default: false },
+//     showAToB: { type: Boolean, default: true },
+//     showBToA: { type: Boolean, default: true },
+//   },
+//   { timestamps: true }
+// );
+
+// module.exports = model("Connection", ConnectionSchema);

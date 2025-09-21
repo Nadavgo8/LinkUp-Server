@@ -19,6 +19,15 @@ exports.updateMe = async (req, res, next) => {
       "goals",
       "languages",
       "dob",
+      "occupation",
+      "company",
+      "smoker",
+      "relationshipStatus",
+      "education",
+      "interests",
+      "city",
+      "lat",
+      "lng",
     ];
     const updates = {};
     allowed.forEach((k) => {
@@ -29,6 +38,25 @@ exports.updateMe = async (req, res, next) => {
     if (updates.goals) {
       updates.goals = updates.goals.map((g) => g.toLowerCase());
     }
+
+    // normalize interests if provided as CSV string
+    if (updates.interests) {
+      if (typeof updates.interests === "string") {
+        updates.interests = updates.interests
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+      } else if (Array.isArray(updates.interests)) {
+        updates.interests = updates.interests.map((s) => String(s).trim());
+      }
+    }
+
+    // normalize enums to lowercase
+    if (updates.relationshipStatus)
+      updates.relationshipStatus = String(
+        updates.relationshipStatus
+      ).toLowerCase();
+    if (updates.smoker) updates.smoker = String(updates.smoker).toLowerCase();
 
     // location handling: expect { lat, lng } in body
     if (req.body.lat !== undefined && req.body.lng !== undefined) {

@@ -13,6 +13,24 @@ const UserSchema = new Schema(
       set: (arr) => arr.map((s) => s.toLowerCase()),
     },
     languages: [{ type: String }],
+    occupation: String,
+    company: String,
+    smoker: {
+      type: String,
+      enum: ["yes", "no", "occasionally", "prefer not to say"],
+      lowercase: true,
+      default: "prefer not to say",
+      default: [],
+    },
+    relationshipStatus: {
+      type: String,
+      enum: ["single", "married", "divorced", "other", "prefer not to say"],
+      lowercase: true,
+      default: "prefer not to say",
+    },
+    education: String,
+    interests: { type: [String], default: [] },
+    city: String,
     location: {
       type: { type: String, enum: ["Point"], default: "Point" },
       coordinates: { type: [Number], default: [0, 0] }, // [lng, lat]

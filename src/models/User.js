@@ -20,7 +20,6 @@ const UserSchema = new Schema(
       enum: ["yes", "no", "occasionally", "prefer not to say"],
       lowercase: true,
       default: "prefer not to say",
-      default: [],
     },
     relationshipStatus: {
       type: String,
@@ -33,7 +32,7 @@ const UserSchema = new Schema(
     city: String,
     location: {
       type: { type: String, enum: ["Point"], default: "Point" },
-      coordinates: { type: [Number], default: [0, 0] }, // [lng, lat]
+      coordinates: { type: [Number], default: [34.78, 32.08] }, // [lng, lat]
     },
     verified: { type: Boolean, default: false },
     idDocUrl: { type: String },

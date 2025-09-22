@@ -62,7 +62,7 @@ exports.updateMe = async (req, res, next) => {
     if (req.body.lat !== undefined && req.body.lng !== undefined) {
       updates.location = {
         type: "Point",
-        coordinates: [parseFloat(req.body.lng), parseFloat(req.body.lat)],
+        coordinates: [parseFloat(req.body.lng), parseFloat(req.body.lat)], // ⚠️ [lng, lat]
       };
     }
 
@@ -70,6 +70,7 @@ exports.updateMe = async (req, res, next) => {
       new: true,
       runValidators: true,
     }).select("-password -idDocUrl");
+
     res.json(user);
   } catch (err) {
     next(err);

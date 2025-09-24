@@ -4,8 +4,8 @@
   "description": "LinkUp - Social matching platform backend",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node LinkUp-Server/src/index.js",
+    "dev": "nodemon LinkUp-Server/src/index.js",
     "test": "jest --runInBand"
   },
   "repository": {

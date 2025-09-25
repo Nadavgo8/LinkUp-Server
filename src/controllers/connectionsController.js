@@ -57,11 +57,22 @@ exports.makeDecision = async (req, res, next) => {
     }
 
     // Create or update the outgoing decision
-    const conn = await Connection.findOneAndUpdate(
-      { from: userId, to: targetId, goal },
-      { decision },
-      { upsert: true, new: true }
-    );
+    // const conn = await Connection.findOneAndUpdate(
+    //   { from: userId, to: targetId, goal },
+    //   { decision },
+    //   { upsert: true, new: true }
+    // );
+
+    const query  = { from: userId, to: targetId, goal };
+    const update = { $set: { decision, goal } };
+    if (decision === "pass") {
+       update.$set.expiresAt = new Date(Date.now() + 10 * 60 * 60 * 1000);
+     } else {
+     update.$unset = { expiresAt: 1 }; 
+    }
+    const conn = await Connection.findOneAndUpdate(query, update, {
+      upsert: true, new: true, setDefaultsOnInsert: true
+    });
 
     let matched = false;
     let dm = null;

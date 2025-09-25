@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const User = require("../models/User");
 
+const Connection = require("../models/Connection");
+
 exports.discoverUsers = async (req, res, next) => {
   try {
     let { lat, lng, radius, goals, goal, langs } = req.query;
@@ -39,9 +41,37 @@ exports.discoverUsers = async (req, res, next) => {
       [lng, lat] = me.location.coordinates;
     }
 
+
+    const passQuery = {
+        from: new mongoose.Types.ObjectId(req.userId),
+        decision: 'pass',
+        expiresAt: { $gt: new Date() },
+      };
+    if (goalsArray.length === 1) passQuery.goal = goalsArray[0];
+    else if (goalsArray.length > 1) passQuery.goal = { $in: goalsArray };
+    const passDocs = await Connection.find(passQuery).select('to');
+   
+
+    const matchQuery = {
+      from: new mongoose.Types.ObjectId(req.userId),
+      decision: 'match',
+    };
+    if (goalsArray.length === 1) matchQuery.goal = goalsArray[0];
+    else if (goalsArray.length > 1) matchQuery.goal = { $in: goalsArray };
+    const matchDocs = await Connection.find(matchQuery).select('to');
+
+    const blockedIds = [...passDocs, ...matchDocs].map(d => d.to);
+
+    
     // ensure numbers
     const lngNum = parseFloat(lng);
     const latNum = parseFloat(lat);
+
+
+    const baseQuery = {
+      _id: { $ne: new mongoose.Types.ObjectId(req.userId) }
+    };
+    if (blockedIds.length) baseQuery._id.$nin = blockedIds;
 
     const pipeline = [
       {
@@ -50,9 +80,10 @@ exports.discoverUsers = async (req, res, next) => {
           distanceField: "distanceMeters",
           maxDistance: radiusInMeters,
           spherical: true,
-          query: {
-            _id: { $ne: new mongoose.Types.ObjectId(req.userId) }, // exclude self
-          },
+          // query: {
+          //   _id: { $ne: new mongoose.Types.ObjectId(req.userId) }, // exclude self
+          // },
+          query: baseQuery,
         },
       },
       // optional filters

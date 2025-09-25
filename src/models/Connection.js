@@ -6,11 +6,14 @@ const ConnectionSchema = new Schema(
     to:   { type: Types.ObjectId, ref: "User", required: true, index: true },
     goal: { type: String, required: true, index: true }, // 'dating' | 'sports' | ...
     decision: { type: String, enum: ["match", "pass"], required: true },
+    expiresAt: { type: Date, index: true }
   },
   { timestamps: true }
 );
 
 ConnectionSchema.index({ from: 1, to: 1, goal: 1 }, { unique: true });
+
+ConnectionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = model("Connection", ConnectionSchema);
 

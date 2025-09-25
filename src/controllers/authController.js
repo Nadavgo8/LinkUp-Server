@@ -21,7 +21,11 @@ exports.register = async (req, res, next) => {
     if (age < 16) return res.status(403).json({ msg: "must be 16+" });
 
     const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ msg: "email exists" });
+    if (existing) {
+      return res.status(400).json({
+        msg: "A user with this email already exists. Please use another email.",
+      });
+    }
 
     const hashed = await bcrypt.hash(password, 10);
     const photoUrl = req.file ? req.file.path : undefined;
@@ -34,17 +38,22 @@ exports.register = async (req, res, next) => {
       photoUrl,
     });
 
-    const token = createToken(user._id);
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        email: user.email,
-        fullName: user.fullName,
-        photoUrl: user.photoUrl || null,
-      },
+    // const token = createToken(user._id);
+    // res.json({
+    //   token,
+    //   user: {
+    //     id: user._id,
+    //     email: user.email,
+    //     fullName: user.fullName,
+    //     photoUrl: user.photoUrl || null,
+    //   },
+    // });
+    return res.status(201).json({
+      success: true,
+      message: "Registration was successful, welcome to LinkUp! Please login.",
     });
   } catch (err) {
+    console.error("Register error:", err);
     next(err);
   }
 };
@@ -55,10 +64,14 @@ exports.login = async (req, res, next) => {
     if (!email || !password) return res.status(400).json({ msg: "missing" });
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "invalid credentials" });
+    if (!user) {
+      return res.status(400).json({ msg: "Invalid email or password." });
+    }
 
     const ok = await bcrypt.compare(password, user.password);
-    if (!ok) return res.status(400).json({ msg: "invalid credentials" });
+    if (!ok) {
+      return res.status(400).json({ msg: "Invalid email or password." });
+    }
 
     const token = createToken(user._id);
     res.json({
@@ -66,6 +79,7 @@ exports.login = async (req, res, next) => {
       user: { id: user._id, email: user.email, fullName: user.fullName },
     });
   } catch (err) {
+    console.error("Login error:", err);
     next(err);
   }
 };

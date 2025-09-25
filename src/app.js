@@ -27,11 +27,13 @@ if (!STREAM_API_KEY || !STREAM_API_SECRET) {
 }
 const serverClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
 
+app.set("serverClient", serverClient);
+
 // Routes
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/profile", profilesRoutes);
-// app.use("/chats", chatRoutes);
+app.use("/chats", chatRoutes);
 app.use("/events", eventRoutes);
 app.use("/connections", connectionRoutes);
 app.use("/api/stream", createStreamRouter(serverClient)); // POST /api/stream/token

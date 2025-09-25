@@ -132,9 +132,7 @@ async function ensureDm(serverClient, userA, userB, goal) {
     User.findById(userB).select("fullName photoUrl").lean(),
   ]);
 
-  const aName = a?.fullName || String(userA);
-  const bName = b?.fullName || String(userB);
-  const displayName = dmDisplayName(aName, bName);
+
 
   // Upsert users in Stream so UI shows proper name/avatar
   await serverClient.upsertUsers([

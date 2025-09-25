@@ -163,20 +163,6 @@ async function ensureDm(serverClient, userA, userB, goal) {
       {},
       { limit: 1 }
     );
-  } else {
-    // Keep the display name in sync if someone renamed
-    const currentName = (found.data || {}).name || "";
-    if (currentName !== displayName) {
-      await serverClient.partialUpdateChannel(
-        { id }
-        // { set: { name: displayName } }
-      );
-      [found] = await serverClient.queryChannels(
-        { id: { $eq: id } },
-        {},
-        { limit: 1 }
-      );
-    }
   }
 
   // Optional greetings (safe but idempotent-ish per call)

@@ -4,173 +4,102 @@
 
 LinkUp Server is the backend component of the LinkUp social networking platform - an advanced social media application designed for connecting users and sharing content. The server is built with Node.js and provides a comprehensive API for user management, connections, events, and real-time communication.
 
-## ✨ Key Features
+## Features
 
-- **Authentication & Security**: Secure login system with JWT tokens
-- **User Management**: User profiles, updates, and verification
-- **Social Connections**: Friend system and user following
-- **Event System**: Create and manage social events
-- **Real-time Communication**: Live chat and streaming capabilities
-- **File Upload**: Full media upload support
-- **Data Management**: Advanced database models and relationships
+- User authentication (JWT)
+- User profiles and updates
+- Social connections (match/pass)
+- Event creation and discovery
+- Real-time chat (Stream Chat API)
+- File uploads (Cloudinary)
+- Geolocation-based user discovery
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 src/
-├── config/           # Configuration files
-│   ├── cloudinary.js # Cloud storage configuration
-│   └── db.js        # Database connection setup
-├── controllers/      # Route handlers and business logic
-│   ├── authController.js
-│   ├── connectionsController.js
-│   ├── profilesController.js
-│   └── userController.js
-├── middlewares/      # Custom middleware functions
-│   ├── authMiddleware.js
-│   └── uploadd.js
-├── models/          # Database models
-│   ├── Connection.js
-│   └── User.js
-├── routes/          # API route definitions
-│   ├── authRoutes.js
-│   ├── chatRoutes.js
-│   ├── connectionRoutes.js
-│   ├── profilesRoutes.js
-│   ├── streamRoutes.js
-│   └── userRoutes.js
-└── utils/           # Utility functions
-│     └──dmChannelId.js
-├── index.js
-└── app.js
+  app.js                # Express app setup
+  index.js              # Entry point
+  config/               # Configuration files
+    cloudinary.js
+    db.js
+  controllers/          # Route handlers
+    authController.js
+    connectionsController.js
+    eventController.js
+    profilesController.js
+    uesrController.js
+  middlewares/          # Express middlewares
+    authMiddleware.js
+    upload.js
+  models/               # Mongoose models
+    Connection.js
+    Events.js
+    User.js
+  routes/               # API routes
+    authRoutes.js
+    chat.js
+    chatRoutes.js
+    connectionRoutes.js
+    eventRoutes.js
+    profilesRoutes.js
+    streamRoutes.js
+    userRoutes.js
+  services/
+    chatService.js      # Chat/DM logic
+  utils/
+    dmChannelId.js      # Utility for DM channel IDs
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- npm or yarn
-- MongoDB database
-- Cloudinary account (for media storage)
+- Node.js (v14+)
+- MongoDB
+- Cloudinary account
+- Stream Chat account
 
-### Installation
+### Setup
 
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd linkup-server
-   ```
-
-2. **Install dependencies**
-
-   ```bash
+1. Clone the repository
+2. Install dependencies:
+   ```sh
    npm install
    ```
-
-3. **Environment Configuration**
-   Create a `.env` file in the root directory:
-
-   ```env
+3. Create a `.env` file in the root directory with the following variables:
+   ```
    PORT=3000
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret_key
+   MONGO_URI=your_mongodb_uri
+   JWT_SECRET=your_jwt_secret
    CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-   CLOUDINARY_API_KEY=your_api_key
-   CLOUDINARY_API_SECRET=your_api_secret
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   STREAM_API_KEY=your_stream_api_key
+   STREAM_API_SECRET=your_stream_api_secret
    ```
-
-4. **Start the server**
-
-   ```bash
-   # Development mode
+4. Start the server:
+   ```sh
    npm run dev
-
-   # Production mode
-   npm start
    ```
 
-## 📡 API Endpoints
+## API Endpoints
 
-### Authentication
+- `POST /auth/register` - Register a new user
+- `POST /auth/login` - Login
+- `GET /user/profile` - Get current user profile
+- `PUT /user/profile` - Update profile
+- `GET /user/:id` - Get another user's profile
+- `PUT /user/change-password` - Change password
+- `POST /user/upload-id` - Upload ID document
+- `GET /profile/discover` - Discover users nearby
+- `GET /profile/searchbuddy` - Find users with similar goals
+- `POST /connections/:targetId` - Match/pass another user
+- `GET /events/events` - List events
+- `POST /events/events` - Create event
+- `POST /api/stream/token` - Get Stream Chat token
+- `POST /api/chat/ensure-dm` - Ensure DM channel
 
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
+## License
 
-### User Management
-
-- `GET /api/users/profile` - Get user profile
-- `PUT /api/users/profile` - Update user profile
-- `GET /api/users/:id` - Get specific user
-
-### Connections
-
-- `GET /api/connections` - Get user connections
-- `POST /api/connections/send` - Send connection request
-- `PUT /api/connections/accept` - Accept connection request
-
-### Events
-
-- `GET /api/events` - Get events
-- `PUT /api/events/:id` - Update event
-
-### Chat & Streaming
-
-- `GET /api/chat/messages` - Get chat messages
-- `POST /api/chat/send` - Send message
-- `GET /api/stream/rooms` - Get streaming rooms
-
-## 🛠️ Technologies Used
-
-- **Backend Framework**: Node.js with Express.js
-- **Database**: MongoDB with Mongoose ODM
-- **Authentication**: JSON Web Tokens (JWT)
-- **File Storage**: Cloudinary
-- **Real-time Communication**: Socket.io
-- **Security**: bcrypt, helmet, cors
-- **Development Tools**: nodemon, dotenv
-
-## 🔧 Configuration
-
-### Database Models
-
-**User Model**
-
-- Profile information (name, email, bio, avatar)
-- Authentication credentials
-- Account settings and preferences
-
-**Connection Model**
-
-- Friend relationships between users
-- Connection status (pending, accepted, blocked)
-
-**Event Model**
-
-- Event details (title, description, date, location)
-- Participant management
-- Event categories and tags
-
-## 🔐 Security Features
-
-- Password hashing with bcrypt
-- JWT token-based authentication
-- Input validation and sanitization
-- CORS configuration
-- Rate limiting
-- File upload security
-
-## 📝 Development
-
-### Code Style
-
-- ES6+ JavaScript features
-- Async/await for asynchronous operations
-- Modular architecture with separation of concerns
-- RESTful API design principles
-
----
-
-**LinkUp Server** - Connecting people, creating experiences 🌐
+MIT
